@@ -49,7 +49,7 @@ public class Action
         this.szApiKey = szApiKey;
     }
 
-    protected String sendRequestReturnString(RequestArgs requestArgs, boolean bPrintJson)
+    protected String sendRequestReturnString(Object requestArgs, boolean bPrintJson)
     {
         //Converts the request arguments into a json string
         Gson gson = new Gson();
