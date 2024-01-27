@@ -4,6 +4,7 @@ import me.bteuk.bteapiconnectorjava.buildtheearth.actions.RequestType;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
@@ -30,10 +31,10 @@ public class BuildTheEarthAPIHandler
      * @param szEndpointUrl The API endpoint url. This is anything after the base, for example, just send "/healthcheck". Do not include the "https://api.buildtheearth.net/api/v1", that is the base
      * @param szRequestArgs The arguments of the request, in a string format representing a JSON
      * @param headers A 2d array of request headers
-     * @param bPrintJson If true, outputs the request JSON to the console
+     * @param bPrintRequestAndResponseDetails If true, outputs the request and response details (headers and Json content)
      * @return The response from the API
      */
-    public static BuildTheEarthAPIResponse request(RequestType requestType, String szApiKey, String szEndpointUrl, String szRequestArgs, String[][] headers, boolean bPrintJson)
+    public static BuildTheEarthAPIResponse request(RequestType requestType, String szApiKey, String szEndpointUrl, String szRequestArgs, String[][] headers, boolean bPrintRequestAndResponseDetails)
     {
         //Ensures API key is initialised
         if (szApiKey == null)
@@ -53,7 +54,7 @@ public class BuildTheEarthAPIHandler
             default -> builder = ClassicRequestBuilder.post(szEndPointBase+szEndpointUrl);
         }
 
-        System.out.print("URL: "+szEndPointBase+szEndpointUrl);
+        System.out.print("Sending a request at: "+szEndPointBase+szEndpointUrl);
 
         //Checks to see if an API key was specified
         if (szApiKey.equals(""))
@@ -67,7 +68,7 @@ public class BuildTheEarthAPIHandler
         }
 
         //Adds the request json
-        builder = builder.setEntity(szRequestArgs);
+        builder = builder.setEntity(szRequestArgs, ContentType.APPLICATION_JSON);
 
         //Adds any additional headers
         for (int i = 0 ; i < headers.length ; i++)
@@ -79,18 +80,21 @@ public class BuildTheEarthAPIHandler
         ClassicHttpRequest httpRequest = builder.build();
 
         //Creates the response object
-        BuildTheEarthAPIResponse buildTheEarthAPIResponse = null;
+        BuildTheEarthAPIResponse buildTheEarthAPIResponse;
 
         //Prints out the request headers
-        System.out.println("\nRequest Headers:");
-        for (int i = 0 ; i < httpRequest.getHeaders().length ; i++)
+        if (bPrintRequestAndResponseDetails)
         {
-            System.out.println(i +" - " +httpRequest.getHeaders()[i]);
+            System.out.println("\nRequest Headers:");
+            for (int i = 0 ; i < httpRequest.getHeaders().length ; i++)
+            {
+                System.out.println(i +" - " +httpRequest.getHeaders()[i]);
+            }
+            System.out.println("End of headers");
         }
-        System.out.println("End of headers");
 
         //Prints out the request json
-        if (bPrintJson)
+        if (bPrintRequestAndResponseDetails)
         {
             System.out.println("\nRequest entity (json):");
             System.out.println(szRequestArgs);
@@ -107,12 +111,16 @@ public class BuildTheEarthAPIHandler
 
                 //Prints the status of the request - should always be 200
                 System.out.println("\nBuildTheEarthAPIHandler.request() status of the request: " +response.getCode() + " " + response.getReasonPhrase());
-                System.out.println("\nResponse Headers:");
-                for (int i = 0 ; i < response.getHeaders().length ; i++)
+
+                if (bPrintRequestAndResponseDetails)
                 {
-                    System.out.println(i +" - " +response.getHeaders()[i]);
+                    System.out.println("\nResponse Headers:");
+                    for (int i = 0 ; i < response.getHeaders().length ; i++)
+                    {
+                        System.out.println(i +" - " +response.getHeaders()[i]);
+                    }
+                    System.out.println("End of headers\n");
                 }
-                System.out.println("End of headers\n");
 
                 //Extracts the content from the response
                 int iCode = response.getCode();
