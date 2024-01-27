@@ -1,4 +1,4 @@
-package me.bteuk.bteapiconnectorjava.buildtheearth.objects;
+package me.bteuk.bteapiconnectorjava.buildtheearth.objects.buildteam;
 
 public enum SocialMediaPlatform
 {

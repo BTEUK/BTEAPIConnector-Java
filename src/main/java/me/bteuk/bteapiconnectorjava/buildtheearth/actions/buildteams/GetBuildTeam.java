@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import me.bteuk.bteapiconnectorjava.buildtheearth.actions.Action;
 import me.bteuk.bteapiconnectorjava.buildtheearth.actions.RequestArgs;
 import me.bteuk.bteapiconnectorjava.buildtheearth.actions.RequestType;
-import me.bteuk.bteapiconnectorjava.buildtheearth.objects.Count;
-import me.bteuk.bteapiconnectorjava.buildtheearth.objects.Member;
-import me.bteuk.bteapiconnectorjava.buildtheearth.objects.Showcase;
-import me.bteuk.bteapiconnectorjava.buildtheearth.objects.Social;
+import me.bteuk.bteapiconnectorjava.buildtheearth.objects.buildteam.Count;
+import me.bteuk.bteapiconnectorjava.buildtheearth.objects.buildteam.Member;
+import me.bteuk.bteapiconnectorjava.buildtheearth.objects.buildteam.Showcase;
+import me.bteuk.bteapiconnectorjava.buildtheearth.objects.buildteam.Social;
 
 /**
  * Gets a build team
@@ -82,7 +82,7 @@ public class GetBuildTeam extends Action
     {
         GetBuildTeam getBuildTeam = new GetBuildTeam("gb", true, false, false);
         GetBuildTeam getBuildTeamResponse = getBuildTeam.getBuildTeam(false);
-        System.out.println(getBuildTeamResponse.location);
+        System.out.println((new Gson()).toJson(getBuildTeamResponse));
     }
 }
 
